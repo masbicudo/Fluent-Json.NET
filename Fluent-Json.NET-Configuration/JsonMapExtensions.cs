@@ -66,7 +66,15 @@ namespace FluentJsonNet
             jsonMap.Map((LambdaExpression)expr, name);
         }
 
-        public static void SubclassMap<T>(this IAndSubtypes jsonMap, Expression<Func<T, object>> expr, string name)
+        public static void SubclassMap<TSubclass>(this IAndSubtypes jsonMap, Expression<Func<TSubclass, object>> expr, string name)
+        {
+            if (!jsonMap.SerializedType.IsAssignableFrom(typeof(TSubclass)))
+                throw new Exception("The type `TSubclass` must be a subclass of the `JsonMap.SerializedType`.");
+            ((JsonMapBase)jsonMap).Map((LambdaExpression)expr, name);
+        }
+
+        public static void SubclassMap<T, TSubclass>(this IAndSubtypes<T> jsonMap, Expression<Func<TSubclass, object>> expr, string name)
+            where TSubclass : T
         {
             ((JsonMapBase)jsonMap).Map((LambdaExpression)expr, name);
         }

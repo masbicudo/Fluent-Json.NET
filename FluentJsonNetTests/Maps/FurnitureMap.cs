@@ -12,7 +12,7 @@ namespace FluentJsonNetTests.Maps
             this.DiscriminatorValue(t => t.Name);
             this.Map(x => x.Cost, "cost");
             this.SubclassMap<Desk>(x => x.Height, "h");
-            this.SubclassMap<Chair>(x => x.ComfortLevel, "comfort");
+            this.SubclassMap((Chair x) => x.ComfortLevel, "comfort");
         }
 
         protected override Furniture CreateObject(string discriminatorValue)

@@ -9,7 +9,7 @@ namespace FluentJsonNet
         public override Type SerializedType { get; } = typeof(T);
 
         public class AndSubtypes : JsonMap<T>,
-            IAndSubtypes
+            IAndSubtypes<T>
         {
             public override Type SerializedType { get; } = typeof(T);
 
@@ -77,6 +77,11 @@ namespace FluentJsonNet
             }
 
             object IAndSubtypes.CreateObject(string discriminatorValue)
+            {
+                return this.CreateObject(discriminatorValue);
+            }
+
+            T IAndSubtypes<T>.CreateObject(string discriminatorValue)
             {
                 return this.CreateObject(discriminatorValue);
             }
