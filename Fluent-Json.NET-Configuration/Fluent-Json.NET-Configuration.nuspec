@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Fluent-Json.NET</id>
+    <version>0.0.0</version>
+    <title>Fluent Configuration for Json.NET by MASBicudo</title>
+    <authors>Miguel Angelo (masbicudo)</authors>
+    <owners>Miguel Angelo</owners>
+    <licenseUrl>https://github.com/masbicudo/Fluent-Json.NET/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/masbicudo/Fluent-Json.NET</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/masbicudo/Fluent-Json.NET/master/Fluent-Json.NET-Configuration/icon-256.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>
+        Fluent configuration for Json.NET library.
+        Tried to follow Fluent NHibernate mapping classes style.
+        Implemented as converter and contract resolver.
+    </summary>
+    <description>
+        See the project page for more.
+    </description>
+    <releaseNotes>
+        0.0.0 - initial release
+        See the project page for more.
+    </releaseNotes>
+    <copyright>Copyright MASBicudo 2016</copyright>
+    <tags>
+        fluent configuration for Json.NET masbicudo masb miguel angelo
+    </tags>
+  </metadata>
+</package>
