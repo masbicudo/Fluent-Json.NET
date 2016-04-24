@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Fluent-Json.NET</id>
-    <version>0.0.0</version>
+    <version>0.0.1</version>
     <title>Fluent Configuration for Json.NET by MASBicudo</title>
     <authors>Miguel Angelo (masbicudo)</authors>
     <owners>Miguel Angelo</owners>
@@ -19,6 +19,7 @@
         See the project page for more.
     </description>
     <releaseNotes>
+        0.0.1 - removed JetBrains.Annotations dependency
         0.0.0 - initial release
         See the project page for more.
     </releaseNotes>
