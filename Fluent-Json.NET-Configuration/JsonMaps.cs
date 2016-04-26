@@ -35,7 +35,7 @@ namespace FluentJsonNet
 
             var result = new JsonMapsConverter(jsonMaps);
 
-            return new List<JsonConverter>(jsonMaps.Count()) { result };
+            return new List<JsonConverter>(jsonMaps.Count()) { result }.AsReadOnly();
         }
 
         private static IContractResolver CreateContractResolver([NotNull] IEnumerable<JsonMapBase> jsonMaps)
