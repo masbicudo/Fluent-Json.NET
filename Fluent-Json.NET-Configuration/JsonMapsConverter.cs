@@ -161,6 +161,13 @@ namespace FluentJsonNet
             while (this.blockOnce == 1)
                 throw new Exception("Writing is blocked but should not.");
 
+            if (reader.TokenType == JsonToken.Null)
+            {
+                var isNullable = Nullable.GetUnderlyingType(objectType) != null || !objectType.IsValueType;
+                if (isNullable)
+                    return null;
+            }
+
             var jo = JObject.Load(reader);
 
             // finding discriminator field name

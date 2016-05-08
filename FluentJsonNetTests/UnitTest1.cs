@@ -68,5 +68,25 @@ namespace FluentJsonNetTests
             Assert.AreEqual(1.2f, objDesk.Height);
             Assert.AreEqual(1800f, objDesk.Cost);
         }
+
+        [TestMethod]
+        public void TestMethod7()
+        {
+            var objFurnitures = JsonConvert.DeserializeObject<Furniture[]>("[{\"h\":1.2,\"cost\":1800.0,\"class\":\"Desk\"}]");
+
+            Assert.IsInstanceOfType(objFurnitures[0], typeof(Desk));
+            var objDesk = objFurnitures[0] as Desk;
+            Debug.Assert(objDesk != null, "objCar != null");
+            Assert.AreEqual(1.2f, objDesk.Height);
+            Assert.AreEqual(1800f, objDesk.Cost);
+        }
+
+        [TestMethod]
+        public void TestMethod8()
+        {
+            var objFurnitures = JsonConvert.DeserializeObject<Furniture[]>("[null]");
+
+            Assert.AreEqual(objFurnitures[0], null);
+        }
     }
 }
