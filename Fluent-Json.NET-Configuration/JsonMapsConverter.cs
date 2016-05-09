@@ -321,13 +321,15 @@ namespace FluentJsonNet
                                 subDiscriminatorFieldValue = discriminatorFieldValueToken.Value<string>();
 
                             if (subDiscriminatorFieldValue == null)
-                                throw new Exception($"Discriminator field not found.");
+                                break;
                         }
                     }
                 }
 
-                subclassMapToUse = subclassMapToUse2;
-                if (subclassMapToUse != null && subDiscriminatorFieldValue != null)
+                if (subclassMapToUse2 != null)
+                    subclassMapToUse = subclassMapToUse2;
+
+                if (subclassMapToUse2 != null && subDiscriminatorFieldValue != null)
                     throw new Exception("Value of discriminator field not verified by any subclass map.");
             }
 
