@@ -52,8 +52,11 @@
     <Compile Include="JsonMapBase.cs" />
     <Compile Include="JsonMapExtensions.cs" />
     <Compile Include="JsonMaps.cs" />
+    <Compile Include="JsonMapsCache.cs" />
     <Compile Include="JsonMapsContractResolver.cs" />
     <Compile Include="JsonMapsConverter.cs" />
+    <Compile Include="JsonMapsTree.cs" />
+    <Compile Include="JsonMapsTreeNode.cs" />
     <Compile Include="JsonSubclassMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\EnumExt.cs" />

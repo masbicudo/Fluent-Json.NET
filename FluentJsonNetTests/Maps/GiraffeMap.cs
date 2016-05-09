@@ -3,7 +3,7 @@ using FluentJsonNetTests.Models;
 
 namespace FluentJsonNetTests.Maps
 {
-    public class GiraffeMap : JsonMap<Giraffe>
+    public class GiraffeMap : JsonSubclassMap<Giraffe>
     {
         public GiraffeMap()
         {

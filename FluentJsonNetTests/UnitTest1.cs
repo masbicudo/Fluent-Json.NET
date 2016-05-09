@@ -1,11 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using FluentJsonNet;
+﻿using FluentJsonNet;
 using FluentJsonNetTests.Maps.Controls;
 using FluentJsonNetTests.Models;
 using FluentJsonNetTests.Models.Controls;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using System;
+using System.Diagnostics;
 using static FluentJsonNetTests.MyAssert;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -164,7 +164,76 @@ namespace FluentJsonNetTests
         [TestMethod]
         public void TestMethod10()
         {
-            var control = JsonConvert.DeserializeObject<ControlModel>("{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\"}");
+            Throws<Exception>(
+                "Discriminator field not found.",
+                () => JsonConvert.DeserializeObject<ControlModel>("{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\"}"));
+        }
+
+        [TestMethod]
+        public void TestMethod10_1a()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMap),
+                    typeof(EditorModelMapNoDiscriminator),
+                    typeof(TextBoxModelMap),
+                });
+
+            var textBox = JsonConvert.DeserializeObject<TextBoxModel>(
+                "{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\",\"editor\":\"TextBox\"}");
+            AreEqual("T", textBox.Text);
+            AreEqual("A", textBox.Default);
+            AreEqual("N", textBox.Name);
+        }
+
+        [TestMethod]
+        public void TestMethod10_1b()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMap),
+                    typeof(EditorModelMapNoDiscriminator),
+                    typeof(TextBoxModelMap),
+                });
+
+            Throws<Exception>(
+                "Cannot create object of type `FluentJsonNetTests.Models.Controls.EditorModel`",
+                () => JsonConvert.DeserializeObject<EditorModel>("{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\",\"editor\":\"TextBox\"}"));
+        }
+
+        [TestMethod]
+        public void TestMethod10_2()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMap),
+                    typeof(EditorModelMap),
+                    typeof(TextBoxModelMapNoDiscriminator),
+                });
+
+            Throws<Exception>(
+                "Value of discriminator field not verified by any subclass map.",
+                () => JsonConvert.DeserializeObject<EditorModel>("{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\",\"editor\":\"TextBox\"}"));
+        }
+
+        [TestMethod]
+        public void TestMethod10_3()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMap),
+                    typeof(EditorModelMapNoDiscriminator),
+                    typeof(TextBoxModelMapNoDiscriminator),
+                });
+            Throws<Exception>(
+                "Cannot create object of type `FluentJsonNetTests.Models.Controls.EditorModel`",
+                () => JsonConvert.DeserializeObject<EditorModel>("{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\"}"));
+        }
+
+        [TestMethod]
+        public void TestMethod10_4a()
+        {
+            var control = JsonConvert.DeserializeObject<EditorModel>("{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\",\"editor\":\"TextBox\"}");
 
             IsInstanceOfType(control, typeof(TextBoxModel));
             var textBox = (TextBoxModel)control;
@@ -174,9 +243,157 @@ namespace FluentJsonNetTests
         }
 
         [TestMethod]
+        public void TestMethod10_4b()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMapBaseDiscriminator),
+                    typeof(EditorModelMapDoubleDiscriminator),
+                    typeof(TextBoxModelMap),
+                });
+            var control = JsonConvert.DeserializeObject<ControlModel>(
+                    "{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\",\"editor\":\"TextBox\",\"type\":\"editor\"}");
+            IsInstanceOfType(control, typeof(TextBoxModel));
+            var textBox = (TextBoxModel)control;
+            AreEqual("T", textBox.Text);
+            AreEqual("A", textBox.Default);
+            AreEqual("N", textBox.Name);
+        }
+
+        [TestMethod]
+        public void TestMethod10_4c()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMapBaseDiscriminator),
+                    typeof(EditorModelMapDoubleDiscriminator),
+                    typeof(TextBoxModelMap),
+                });
+            var editor = JsonConvert.DeserializeObject<EditorModel>(
+                    "{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\",\"editor\":\"TextBox\",\"type\":\"editor\"}");
+            IsInstanceOfType(editor, typeof(TextBoxModel));
+            var textBox = (TextBoxModel)editor;
+            AreEqual("T", textBox.Text);
+            AreEqual("A", textBox.Default);
+            AreEqual("N", textBox.Name);
+        }
+
+        [TestMethod]
+        public void TestMethod10_4d()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMapBaseDiscriminator),
+                    typeof(EditorModelMapDoubleDiscriminator),
+                    typeof(TextBoxModelMap),
+                });
+            var textBox = JsonConvert.DeserializeObject<TextBoxModel>(
+                    "{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\",\"editor\":\"TextBox\",\"type\":\"editor\"}");
+            AreEqual("T", textBox.Text);
+            AreEqual("A", textBox.Default);
+            AreEqual("N", textBox.Name);
+        }
+
+        [TestMethod]
+        public void TestMethod10_5a()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMapBaseDiscriminator),
+                    typeof(EditorModelMapDoubleDiscriminator),
+                    typeof(TextBoxModelMap),
+                });
+            var editor = JsonConvert.DeserializeObject<EditorModel>(
+                    "{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\",\"editor\":\"TextBox\"}");
+            IsInstanceOfType(editor, typeof(TextBoxModel));
+            var textBox = (TextBoxModel)editor;
+            AreEqual("T", textBox.Text);
+            AreEqual("A", textBox.Default);
+            AreEqual("N", textBox.Name);
+        }
+
+        [TestMethod]
+        public void TestMethod10_5b()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMapBaseDiscriminator),
+                    typeof(EditorModelMapDoubleDiscriminator),
+                    typeof(TextBoxModelMap),
+                });
+            Throws<Exception>(
+                "Value of discriminator field not verified by any subclass map.",
+                () => JsonConvert.DeserializeObject<EditorModel>(
+                    "{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\",\"editor\":\"CheckBox\"}"));
+        }
+
+        [TestMethod]
+        public void TestMethod10_5c()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMapBaseDiscriminator),
+                    typeof(EditorModelMapDoubleDiscriminator),
+                    typeof(TextBoxModelMap),
+                });
+            Throws<Exception>(
+                "Cannot create object of type `FluentJsonNetTests.Models.Controls.EditorModel`",
+                () => JsonConvert.DeserializeObject<EditorModel>(
+                    "{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\"}"));
+        }
+
+        [TestMethod]
+        public void TestMethod10_5d()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMapBaseDiscriminator),
+                    typeof(EditorModelMapDoubleDiscriminator),
+                    typeof(TextBoxModelMap),
+                });
+            var control = JsonConvert.DeserializeObject<ControlModel>(
+                "{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\",\"editor\":\"TextBox\",\"type\":\"editor\"}");
+            IsInstanceOfType(control, typeof(TextBoxModel));
+            var textBox = (TextBoxModel)control;
+            AreEqual("T", textBox.Text);
+            AreEqual("A", textBox.Default);
+            AreEqual("N", textBox.Name);
+        }
+
+        [TestMethod]
+        public void TestMethod10_5e()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMapBaseDiscriminator),
+                    typeof(EditorModelMapDoubleDiscriminator),
+                    typeof(TextBoxModelMap),
+                });
+            Throws<Exception>(
+                "Cannot create object of type `FluentJsonNetTests.Models.Controls.ControlModel`",
+                () => JsonConvert.DeserializeObject<ControlModel>(
+                    "{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\",\"editor\":\"TextBox\"}"));
+        }
+
+        [TestMethod]
+        public void TestMethod10_5f()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMapBaseDiscriminator),
+                    typeof(EditorModelMapDoubleDiscriminator),
+                    typeof(TextBoxModelMap),
+                });
+            Throws<Exception>(
+                "Cannot create object of type `FluentJsonNetTests.Models.Controls.ControlModel`",
+                () => JsonConvert.DeserializeObject<ControlModel>(
+                    "{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\"}"));
+        }
+
+        [TestMethod]
         public void TestMethod11()
         {
-            var control = JsonConvert.DeserializeObject<EditorModel>("{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\"}");
+            var control = JsonConvert.DeserializeObject<EditorModel>("{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\",\"editor\":\"TextBox\"}");
 
             IsInstanceOfType(control, typeof(TextBoxModel));
             var textBox = (TextBoxModel)control;

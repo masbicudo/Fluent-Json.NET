@@ -93,6 +93,7 @@
     <Compile Include="Models\Cat.cs" />
     <Compile Include="Models\Lion.cs" />
     <Compile Include="MyAssert.cs" />
+    <Compile Include="NonDefaultTestMapperAttribute.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTestBase.cs" />

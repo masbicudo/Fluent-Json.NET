@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading;
 using FluentJsonNet.Utils;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace FluentJsonNet
 {
@@ -20,6 +19,8 @@ namespace FluentJsonNet
                 throw new ArgumentNullException(nameof(jsonMaps));
 
             this.maps = new List<JsonMapBase>(jsonMaps);
+
+            this.jsonMapsTree = this.GetJsonMapsTree();
         }
 
         public IReadOnlyCollection<JsonMapBase> Maps => new ReadOnlyCollection<JsonMapBase>(this.maps);
@@ -36,67 +37,90 @@ namespace FluentJsonNet
             }
 
             // the question here is: is this objectType associated with any class hierarchy in the `JsonMap` list?
-            List<JsonMapBase> listOfMaps;
-            List<JsonSubclassMap> listOfSubclassMaps;
-            var ex = this.GetInfoFromTypeCached(objectType, out listOfMaps, out listOfSubclassMaps);
-            return ex == null;
+            var cachedData = this.GetInfoFromTypeCached(objectType);
+            return cachedData != null;
         }
 
-        private readonly Dictionary<Type, Tuple<Exception, List<JsonMapBase>, List<JsonSubclassMap>>> dicTypeData =
-                     new Dictionary<Type, Tuple<Exception, List<JsonMapBase>, List<JsonSubclassMap>>>();
+        private readonly Dictionary<Type, JsonMapsCache> dicTypeData = new Dictionary<Type, JsonMapsCache>();
 
-        private Exception GetInfoFromTypeCached(Type objectType, out List<JsonMapBase> listOfMaps, out List<JsonSubclassMap> listOfSubclassMaps)
+        private readonly JsonMapsTree jsonMapsTree;
+
+        private JsonMapsCache GetInfoFromTypeCached(Type objectType)
         {
-            Tuple<Exception, List<JsonMapBase>, List<JsonSubclassMap>> data;
+            JsonMapsCache data;
             lock (this.dicTypeData)
                 if (!this.dicTypeData.TryGetValue(objectType, out data))
                 {
-                    var list = new List<JsonMapBase>();
-                    var sublist = this.GetJsonSubclassMapsFromType(objectType);
-                    var ex = this.GetJsonMapsFromType(objectType, list);
-                    this.dicTypeData[objectType] = data = Tuple.Create(ex, list, sublist);
+                    var listOfMappers = this.jsonMapsTree.GetMappers(objectType).ToArray();
+                    var subMappers = this.jsonMapsTree.GetSubpathes(objectType).ToArray();
+                    if (listOfMappers.Length == 0 && subMappers.Length == 0)
+                        this.dicTypeData[objectType] = null;
+                    else
+                        this.dicTypeData[objectType] = data = new JsonMapsCache { Mappers = listOfMappers, SubMappers = subMappers };
+                    return data;
                 }
-
-            listOfSubclassMaps = data.Item3;
-            listOfMaps = data.Item2;
-            return data.Item1;
+                else
+                {
+                    return data;
+                }
         }
 
-        private Exception GetJsonMapsFromType(Type objectType, List<JsonMapBase> listOfMaps)
+        private JsonMapsTree GetJsonMapsTree()
         {
-            var acceptedMaps = this.maps
-                .Where(x => x.AcceptsType(objectType))
-                .Where(x => x.SerializedType.IsAssignableFrom(objectType))
-                .WithMax(x => -TypeDistance(x.SerializedType, objectType))
-                .ToList();
+            var dictionary = new Dictionary<Type, JsonMapsTreeNode>();
 
-            if (acceptedMaps.Count == 0)
-                return new Exception($"`No maps for the type `{objectType.Name}`");
-
-            if (acceptedMaps.Count > 1)
-                return new Exception($"Ambiguous maps for the type `{objectType.Name}`");
-
-            var singleMap = acceptedMaps[0];
-            listOfMaps.Add(singleMap);
-            if (singleMap is JsonSubclassMap)
+            foreach (var jsonMapBase in this.maps)
             {
-                // need to find the base type JsonMap
-                return this.GetJsonMapsFromType(objectType.BaseType, listOfMaps);
+                var current = jsonMapBase.SerializedType;
+                JsonMapsTreeNode node;
+                if (!dictionary.TryGetValue(current, out node))
+                {
+                    var acceptedMaps = this.maps
+                        .Where(x => x.AcceptsType(current))
+                        .Where(x => x.SerializedType.IsAssignableFrom(current))
+                        .WithMax(x => -TypeDistance(x.SerializedType, current))
+                        .ToList();
+
+                    if (acceptedMaps.Count == 0)
+                        throw new Exception($"`No maps for the type `{current.Name}`");
+
+                    if (acceptedMaps.Count > 1)
+                        throw new Exception($"Ambiguous maps for the type `{current.Name}`");
+
+                    Type parent = null;
+                    if (current.BaseType != null)
+                    {
+                        var acceptedParentMaps = this.maps
+                            .Where(x => x.AcceptsType(current.BaseType))
+                            .Where(x => x.SerializedType.IsAssignableFrom(current.BaseType))
+                            .WithMax(x => -TypeDistance(x.SerializedType, current.BaseType))
+                            .ToList();
+
+                        if (acceptedParentMaps.Count > 1)
+                            throw new Exception($"Ambiguous maps for the type `{current.BaseType?.Name}`");
+
+                        if (acceptedParentMaps.Count > 0 && jsonMapBase is JsonMap)
+                            throw new Exception($"Sub mappers must be subclasses of `{typeof(JsonSubclassMap).Name}`: `{jsonMapBase.GetType().Name}`");
+
+                        if (acceptedParentMaps.Count > 0)
+                            parent = acceptedParentMaps[0].SerializedType;
+                    }
+
+                    var acceptedChildMaps = this.maps
+                        .Where(x => current.IsAssignableFrom(x.SerializedType))
+                        .Where(x => TypeDistance(current, x.SerializedType) == 1)
+                        .ToList();
+
+                    var children = acceptedChildMaps.Select(x => x.SerializedType).ToArray();
+
+                    if (jsonMapBase is IAndSubtypes && children.Length > 0)
+                        throw new Exception($"IAndSubtypes mapper does not accept child mappers.");
+
+                    dictionary[current] = node = new JsonMapsTreeNode(jsonMapBase, parent, children);
+                }
             }
 
-            return null;
-        }
-
-        private List<JsonSubclassMap> GetJsonSubclassMapsFromType(Type objectType)
-        {
-            var acceptedMaps = this.maps
-                .OfType<JsonSubclassMap>()
-                .Where(x => objectType.IsAssignableFrom(x.SerializedType))
-                .ToList();
-
-            var listOfSubclassMaps = new List<JsonSubclassMap>(acceptedMaps);
-
-            return listOfSubclassMaps;
+            return new JsonMapsTree(dictionary);
         }
 
         private static int TypeDistance(Type baseType, Type subType)
@@ -112,11 +136,8 @@ namespace FluentJsonNet
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            List<JsonMapBase> listOfMaps;
-            List<JsonSubclassMap> listOfSubclassMaps;
-            var ex = this.GetInfoFromTypeCached(value.GetType(), out listOfMaps, out listOfSubclassMaps);
-            if (ex != null)
-                throw ex;
+            var objectType = value?.GetType();
+            var cachedData = this.GetInfoFromTypeCached(objectType);
 
             while (this.blockOnce == 1)
                 throw new Exception("Writing is blocked but should not.");
@@ -126,11 +147,11 @@ namespace FluentJsonNet
 
             // finding discriminator field names
             string discriminatorFieldValue = null;
-            foreach (var jsonMapBase in listOfMaps)
+            foreach (var jsonMapBase in cachedData.Mappers)
             {
                 if (jsonMapBase is IAndSubtypes)
                 {
-                    if (listOfMaps.Count > 1)
+                    if (cachedData.Mappers.Length > 1)
                         throw new Exception("Json mapper of type `IAndSubtypes` cannot be combined with other mappers.");
 
                     var jsonMapWithSubtypes = jsonMapBase as IAndSubtypes;
@@ -140,6 +161,7 @@ namespace FluentJsonNet
                         : value.GetType().AssemblyQualifiedName;
 
                     jo.Add(jsonMapBase.DiscriminatorFieldName, discriminatorFieldValue);
+                    discriminatorFieldValue = null;
                 }
                 else
                 {
@@ -167,11 +189,7 @@ namespace FluentJsonNet
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             // the question here is: is this objectType associated with any class hierarchy in the `JsonMap` list?
-            List<JsonMapBase> listOfMaps;
-            List<JsonSubclassMap> listOfSubclassMaps;
-            var ex = this.GetInfoFromTypeCached(objectType, out listOfMaps, out listOfSubclassMaps);
-            if (ex != null)
-                throw ex;
+            var cachedData = this.GetInfoFromTypeCached(objectType);
 
             while (this.blockOnce == 1)
                 throw new Exception("Writing is blocked but should not.");
@@ -185,36 +203,147 @@ namespace FluentJsonNet
 
             var jo = JObject.Load(reader);
 
-            // finding discriminator field name
             var value = reader.Value;
 
-            var jsonMap = listOfMaps.OfType<JsonMap>().Single();
-            var discriminatorFieldName = jsonMap.DiscriminatorFieldName;
-            if (discriminatorFieldName != null)
-            {
-                var discriminatorFieldValueToken = jo[discriminatorFieldName];
-                if (discriminatorFieldValueToken.Type == JTokenType.String)
-                {
-                    var discriminatorFieldValue = discriminatorFieldValueToken.Value<string>();
+            // Looking for discriminators:
+            // - match the discriminators of the type given by `objectType`
+            // - match the discriminators of subtypes of `objectType`
 
-                    if (jsonMap is IAndSubtypes)
+            // STEP 1: match the discriminators of the type given by `objectType`
+            string discriminatorFieldValue = null;
+            bool foundBaseIAndSubtypes = false;
+            JsonMapBase classMapToUse = null;
+            foreach (var jsonMapBase in cachedData.Mappers.Reverse())
+            {
+                if (foundBaseIAndSubtypes)
+                    throw new Exception($"IAndSubtypes mapper does not accept child mappers.");
+
+                if (jsonMapBase is IAndSubtypes)
+                {
+                    if (jsonMapBase.DiscriminatorFieldName != null)
                     {
-                        var jsonMapWithSubtypes = jsonMap as IAndSubtypes;
-                        value = jsonMapWithSubtypes.CreateObject(discriminatorFieldValue);
+                        var discriminatorFieldValueToken = jo[jsonMapBase.DiscriminatorFieldName];
+                        if (discriminatorFieldValueToken?.Type == JTokenType.String)
+                            discriminatorFieldValue = discriminatorFieldValueToken.Value<string>();
+                    }
+
+                    foundBaseIAndSubtypes = true;
+                    var jsonMapWithSubtypes = jsonMapBase as IAndSubtypes;
+                    value = jsonMapWithSubtypes.CreateObject(discriminatorFieldValue);
+                    serializer.Populate(jo.CreateReader(), value);
+                    discriminatorFieldValue = null;
+                }
+                else
+                {
+                    var jsonSubclassMap = jsonMapBase as JsonSubclassMap;
+                    if (jsonSubclassMap?.DiscriminatorFieldValue != null && discriminatorFieldValue != null)
+                    {
+                        if (jsonSubclassMap.DiscriminatorFieldValue != discriminatorFieldValue)
+                            throw new Exception($"Discriminator does not match.");
+
+                        discriminatorFieldValue = null;
+                    }
+
+                    if (jsonMapBase.DiscriminatorFieldName != null)
+                    {
+                        var discriminatorFieldValueToken = jo[jsonMapBase.DiscriminatorFieldName];
+                        if (discriminatorFieldValueToken?.Type == JTokenType.String)
+                            discriminatorFieldValue = discriminatorFieldValueToken.Value<string>();
+                    }
+
+                    classMapToUse = jsonMapBase;
+                }
+            }
+
+
+            // STEP 2: match the discriminators of subtypes of `objectType`
+            JsonMapBase subclassMapToUse = null;
+            foreach (var jsonSubmappers in cachedData.SubMappers)
+            {
+                string subDiscriminatorFieldValue = discriminatorFieldValue;
+                bool foundSubIAndSubtypes = foundBaseIAndSubtypes;
+                JsonMapBase subclassMapToUse2 = null;
+                foreach (var submapper in jsonSubmappers.Reverse())
+                {
+                    if (foundSubIAndSubtypes)
+                        throw new Exception($"IAndSubtypes mapper does not accept child mappers.");
+
+                    if (submapper is IAndSubtypes)
+                    {
+                        if (submapper.DiscriminatorFieldName != null)
+                        {
+                            var discriminatorFieldValueToken = jo[submapper.DiscriminatorFieldName];
+                            if (discriminatorFieldValueToken?.Type == JTokenType.String)
+                                subDiscriminatorFieldValue = discriminatorFieldValueToken.Value<string>();
+
+                            if (subDiscriminatorFieldValue == null)
+                                throw new Exception($"Discriminator field not found.");
+                        }
+
+                        foundSubIAndSubtypes = true;
+                        var jsonMapWithSubtypes = submapper as IAndSubtypes;
+                        value = jsonMapWithSubtypes.CreateObject(subDiscriminatorFieldValue);
                         serializer.Populate(jo.CreateReader(), value);
+                        subDiscriminatorFieldValue = null;
                     }
                     else
                     {
-                        var subclassMap = listOfSubclassMaps
-                            .SingleOrDefault(x => x.DiscriminatorFieldValue == discriminatorFieldValue);
-
-                        if (subclassMap != null)
+                        var jsonSubclassMap = submapper as JsonSubclassMap;
+                        if (jsonSubclassMap != null)
                         {
-                            value = subclassMap.CreateNew();
-                            serializer.Populate(jo.CreateReader(), value);
+                            if (jsonSubclassMap.DiscriminatorFieldValue != null)
+                            {
+                                if (jsonSubclassMap.DiscriminatorFieldValue != subDiscriminatorFieldValue)
+                                    break;
+
+                                if (subclassMapToUse != null)
+                                    throw new Exception($"Ambiguous maps for the type `{submapper.SerializedType.Name}`");
+
+                                subDiscriminatorFieldValue = null;
+                                subclassMapToUse2 = jsonSubclassMap;
+                            }
+                        }
+                        else
+                        {
+                            if (cachedData.Mappers.Length > 0)
+                                throw new Exception($"Sub mappers must be subclasses of `{typeof(JsonSubclassMap).Name}`: `{cachedData.Mappers[0].GetType().Name}`");
+
+                            if (subclassMapToUse != null)
+                                throw new Exception($"Ambiguous maps for the type `{submapper.SerializedType.Name}`");
+
+                            subclassMapToUse2 = submapper;
+                        }
+
+                        if (submapper.DiscriminatorFieldName != null)
+                        {
+                            var discriminatorFieldValueToken = jo[submapper.DiscriminatorFieldName];
+                            if (discriminatorFieldValueToken?.Type == JTokenType.String)
+                                subDiscriminatorFieldValue = discriminatorFieldValueToken.Value<string>();
+
+                            if (subDiscriminatorFieldValue == null)
+                                throw new Exception($"Discriminator field not found.");
                         }
                     }
                 }
+
+                subclassMapToUse = subclassMapToUse2;
+                if (subclassMapToUse != null && subDiscriminatorFieldValue != null)
+                    throw new Exception("Value of discriminator field not verified by any subclass map.");
+            }
+
+            if (subclassMapToUse == null && discriminatorFieldValue != null)
+                throw new Exception("Value of discriminator field not verified by any subclass map.");
+
+            // STEP 3: Creating the new value with the correct JsonMapBase class if any
+            // - by the way, there is no JsonMapBase when a IAndSubtypes mapper is found
+            var classMapToUse2 = subclassMapToUse ?? classMapToUse;
+            if (classMapToUse2 != null)
+            {
+                if (!classMapToUse2.CanCreateNew())
+                    throw new Exception($"Cannot create object of type `{classMapToUse2.SerializedType}`");
+
+                value = classMapToUse2.CreateNew();
+                serializer.Populate(jo.CreateReader(), value);
             }
 
             return value;

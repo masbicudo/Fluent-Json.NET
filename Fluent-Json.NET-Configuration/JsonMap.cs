@@ -90,5 +90,16 @@ namespace FluentJsonNet
 
     public abstract class JsonMap : JsonMapBase
     {
+        public override object CreateNew()
+        {
+            return Activator.CreateInstance(this.SerializedType);
+        }
+
+        public override bool CanCreateNew()
+        {
+            return !this.SerializedType.IsAbstract
+                   && !this.SerializedType.IsInterface
+                   && (this.SerializedType.IsValueType || this.SerializedType.GetConstructor(new Type[0]) != null);
+        }
     }
 }

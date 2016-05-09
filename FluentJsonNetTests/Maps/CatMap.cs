@@ -3,7 +3,7 @@ using FluentJsonNetTests.Models;
 
 namespace FluentJsonNetTests.Maps
 {
-    public class CatMap : JsonMap<Cat>
+    public class CatMap : JsonSubclassMap<Cat>
     {
         public CatMap()
         {

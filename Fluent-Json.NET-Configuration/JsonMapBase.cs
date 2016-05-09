@@ -41,5 +41,9 @@ namespace FluentJsonNet
         {
             this.DiscriminatorFieldName = fieldName;
         }
+
+        public abstract object CreateNew();
+
+        public abstract bool CanCreateNew();
     }
 }
