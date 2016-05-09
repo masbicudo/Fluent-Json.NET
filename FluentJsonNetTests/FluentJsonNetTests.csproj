@@ -38,6 +38,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=10.1.4.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -60,6 +64,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Maps.Controls\ControlModelMapBaseDiscriminator.cs" />
+    <Compile Include="Maps.Controls\EditorModelMapDoubleDiscriminator.cs" />
+    <Compile Include="Maps.Controls\EditorModelMapNoDiscriminator.cs" />
+    <Compile Include="Maps.Controls\TextBoxModelMapNoDiscriminator.cs" />
     <Compile Include="Maps\FurnitureMap.cs" />
     <Compile Include="Maps\VehicleMap.cs" />
     <Compile Include="Maps\CatMap.cs" />
@@ -67,6 +75,12 @@
     <Compile Include="Maps\LionMap.cs" />
     <Compile Include="Maps\FelineMap.cs" />
     <Compile Include="Maps\AnimalMap.cs" />
+    <Compile Include="Maps.Controls\ControlModelMap.cs" />
+    <Compile Include="Maps.Controls\EditorModelMap.cs" />
+    <Compile Include="Maps.Controls\TextBoxModelMap.cs" />
+    <Compile Include="Models.Controls\ControlModel.cs" />
+    <Compile Include="Models.Controls\EditorModel.cs" />
+    <Compile Include="Models.Controls\TextBoxModel.cs" />
     <Compile Include="Models\Animal.cs" />
     <Compile Include="Models\Chair.cs" />
     <Compile Include="Models\Car.cs" />
@@ -78,6 +92,7 @@
     <Compile Include="Models\Giraffe.cs" />
     <Compile Include="Models\Cat.cs" />
     <Compile Include="Models\Lion.cs" />
+    <Compile Include="MyAssert.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTestBase.cs" />

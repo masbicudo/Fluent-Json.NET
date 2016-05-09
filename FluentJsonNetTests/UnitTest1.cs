@@ -1,7 +1,13 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using FluentJsonNet;
+using FluentJsonNetTests.Maps.Controls;
 using FluentJsonNetTests.Models;
+using FluentJsonNetTests.Models.Controls;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using static FluentJsonNetTests.MyAssert;
+using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace FluentJsonNetTests
 {
@@ -13,7 +19,7 @@ namespace FluentJsonNetTests
         {
             var jsonStr = JsonConvert.SerializeObject(new Lion(45f, 200f, 1000f));
 
-            Assert.AreEqual("{\"strength\":1000.0,\"sight\":200.0,\"speed\":45.0,\"class\":\"lion\"}", jsonStr);
+            AreEqual("{\"strength\":1000.0,\"sight\":200.0,\"speed\":45.0,\"class\":\"lion\"}", jsonStr);
         }
 
         [TestMethod]
@@ -21,12 +27,12 @@ namespace FluentJsonNetTests
         {
             var objAnimal = JsonConvert.DeserializeObject<Animal>("{\"strength\":1000.0,\"sight\":200.0,\"speed\":45.0,\"class\":\"lion\"}");
 
-            Assert.IsInstanceOfType(objAnimal, typeof(Lion));
+            IsInstanceOfType(objAnimal, typeof(Lion));
             var objLion = objAnimal as Lion;
             Debug.Assert(objLion != null, "objLion != null");
-            Assert.AreEqual(45f, objLion.Speed);
-            Assert.AreEqual(1000f, objLion.Strength);
-            Assert.AreEqual(200f, objLion.SightRange);
+            AreEqual(45f, objLion.Speed);
+            AreEqual(1000f, objLion.Strength);
+            AreEqual(200f, objLion.SightRange);
         }
 
         [TestMethod]
@@ -34,7 +40,7 @@ namespace FluentJsonNetTests
         {
             var jsonStr = JsonConvert.SerializeObject(new Car(180f, 4.5f));
 
-            Assert.AreEqual("{\"Size\":4.5,\"speed\":180.0,\"class\":\"FluentJsonNetTests.Models.Car, FluentJsonNetTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"}", jsonStr);
+            AreEqual("{\"Size\":4.5,\"speed\":180.0,\"class\":\"FluentJsonNetTests.Models.Car, FluentJsonNetTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"}", jsonStr);
         }
 
         [TestMethod]
@@ -42,11 +48,11 @@ namespace FluentJsonNetTests
         {
             var objVehicle = JsonConvert.DeserializeObject<Vehicle>("{\"Size\":4.5,\"speed\":180.0,\"class\":\"FluentJsonNetTests.Models.Car, FluentJsonNetTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"}");
 
-            Assert.IsInstanceOfType(objVehicle, typeof(Car));
+            IsInstanceOfType(objVehicle, typeof(Car));
             var objCar = objVehicle as Car;
             Debug.Assert(objCar != null, "objCar != null");
-            Assert.AreEqual(180f, objCar.Speed);
-            Assert.AreEqual(4.5f, objCar.Size);
+            AreEqual(180f, objCar.Speed);
+            AreEqual(4.5f, objCar.Size);
         }
 
         [TestMethod]
@@ -54,7 +60,7 @@ namespace FluentJsonNetTests
         {
             var jsonStr = JsonConvert.SerializeObject(new Desk(1800f, 1.2f));
 
-            Assert.AreEqual("{\"h\":1.2,\"cost\":1800.0,\"class\":\"Desk\"}", jsonStr);
+            AreEqual("{\"h\":1.2,\"cost\":1800.0,\"class\":\"Desk\"}", jsonStr);
         }
 
         [TestMethod]
@@ -62,11 +68,11 @@ namespace FluentJsonNetTests
         {
             var objFurniture = JsonConvert.DeserializeObject<Furniture>("{\"h\":1.2,\"cost\":1800.0,\"class\":\"Desk\"}");
 
-            Assert.IsInstanceOfType(objFurniture, typeof(Desk));
+            IsInstanceOfType(objFurniture, typeof(Desk));
             var objDesk = objFurniture as Desk;
             Debug.Assert(objDesk != null, "objCar != null");
-            Assert.AreEqual(1.2f, objDesk.Height);
-            Assert.AreEqual(1800f, objDesk.Cost);
+            AreEqual(1.2f, objDesk.Height);
+            AreEqual(1800f, objDesk.Cost);
         }
 
         [TestMethod]
@@ -74,11 +80,11 @@ namespace FluentJsonNetTests
         {
             var objFurnitures = JsonConvert.DeserializeObject<Furniture[]>("[{\"h\":1.2,\"cost\":1800.0,\"class\":\"Desk\"}]");
 
-            Assert.IsInstanceOfType(objFurnitures[0], typeof(Desk));
+            IsInstanceOfType(objFurnitures[0], typeof(Desk));
             var objDesk = objFurnitures[0] as Desk;
             Debug.Assert(objDesk != null, "objCar != null");
-            Assert.AreEqual(1.2f, objDesk.Height);
-            Assert.AreEqual(1800f, objDesk.Cost);
+            AreEqual(1.2f, objDesk.Height);
+            AreEqual(1800f, objDesk.Cost);
         }
 
         [TestMethod]
@@ -86,7 +92,109 @@ namespace FluentJsonNetTests
         {
             var objFurnitures = JsonConvert.DeserializeObject<Furniture[]>("[null]");
 
-            Assert.AreEqual(objFurnitures[0], null);
+            AreEqual(objFurnitures[0], null);
+        }
+
+        [TestMethod]
+        public void TestMethod9()
+        {
+            var jsonTextBox = JsonConvert.SerializeObject(new TextBoxModel { Default = "A", Name = "N", Text = "T" });
+
+            AreEqual(jsonTextBox, "{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\",\"editor\":\"TextBox\"}");
+        }
+
+        [TestMethod]
+        public void TestMethod9_1()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMap),
+                    typeof(EditorModelMapNoDiscriminator),
+                    typeof(TextBoxModelMap),
+                });
+
+            Throws<Exception>(
+                "Discriminating value not set to any field.",
+                () => JsonConvert.SerializeObject(new TextBoxModel { Default = "A", Name = "N", Text = "T" }));
+        }
+
+        [TestMethod]
+        public void TestMethod9_2()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMap),
+                    typeof(EditorModelMap),
+                    typeof(TextBoxModelMapNoDiscriminator),
+                });
+
+            Throws<Exception>(
+                "Value of discriminator field not defined by subclass map.",
+                () => JsonConvert.SerializeObject(new TextBoxModel { Default = "A", Name = "N", Text = "T" }));
+        }
+
+        [TestMethod]
+        public void TestMethod9_3()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMap),
+                    typeof(EditorModelMapNoDiscriminator),
+                    typeof(TextBoxModelMapNoDiscriminator),
+                });
+            var jsonTextBox = JsonConvert.SerializeObject(new TextBoxModel { Default = "A", Name = "N", Text = "T" });
+
+            AreEqual(jsonTextBox, "{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\"}");
+        }
+
+        [TestMethod]
+        public void TestMethod9_4()
+        {
+            JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(new[]
+                {
+                    typeof(ControlModelMapBaseDiscriminator),
+                    typeof(EditorModelMapDoubleDiscriminator),
+                    typeof(TextBoxModelMap),
+                });
+            var jsonTextBox = JsonConvert.SerializeObject(new TextBoxModel { Default = "A", Name = "N", Text = "T" });
+
+            AreEqual(jsonTextBox, "{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\",\"editor\":\"TextBox\",\"type\":\"editor\"}");
+        }
+
+        [TestMethod]
+        public void TestMethod10()
+        {
+            var control = JsonConvert.DeserializeObject<ControlModel>("{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\"}");
+
+            IsInstanceOfType(control, typeof(TextBoxModel));
+            var textBox = (TextBoxModel)control;
+            AreEqual("T", textBox.Text);
+            AreEqual("A", textBox.Default);
+            AreEqual("N", textBox.Name);
+        }
+
+        [TestMethod]
+        public void TestMethod11()
+        {
+            var control = JsonConvert.DeserializeObject<EditorModel>("{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\"}");
+
+            IsInstanceOfType(control, typeof(TextBoxModel));
+            var textBox = (TextBoxModel)control;
+            AreEqual("T", textBox.Text);
+            AreEqual("A", textBox.Default);
+            AreEqual("N", textBox.Name);
+        }
+
+        [TestMethod]
+        public void TestMethod12()
+        {
+            var control = JsonConvert.DeserializeObject<TextBoxModel>("{\"text\":\"T\",\"default\":\"A\",\"name\":\"N\"}");
+
+            IsInstanceOfType(control, typeof(TextBoxModel));
+            var textBox = (TextBoxModel)control;
+            AreEqual("T", textBox.Text);
+            AreEqual("A", textBox.Default);
+            AreEqual("N", textBox.Name);
         }
     }
 }

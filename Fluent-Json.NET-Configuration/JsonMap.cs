@@ -90,11 +90,5 @@ namespace FluentJsonNet
 
     public abstract class JsonMap : JsonMapBase
     {
-        internal string DiscriminatorFieldName;
-
-        protected void DiscriminateSubClassesOnField(string fieldName)
-        {
-            this.DiscriminatorFieldName = fieldName;
-        }
     }
 }

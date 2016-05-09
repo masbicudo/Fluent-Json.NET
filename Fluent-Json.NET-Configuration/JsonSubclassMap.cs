@@ -11,6 +11,10 @@ namespace FluentJsonNet
     {
         internal string DiscriminatorFieldValue;
 
+        /// <summary>
+        /// Defines the value of the discriminator field that matches the currently mapped type.
+        /// </summary>
+        /// <param name="fieldValue"></param>
         protected void DiscriminatorValue(string fieldValue)
         {
             this.DiscriminatorFieldValue = fieldValue;

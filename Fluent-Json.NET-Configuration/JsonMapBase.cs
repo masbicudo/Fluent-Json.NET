@@ -11,6 +11,9 @@ namespace FluentJsonNet
         public List<Action<MemberInfo, JsonProperty, MemberSerialization>> Actions { get; } =
             new List<Action<MemberInfo, JsonProperty, MemberSerialization>>();
 
+        /// <summary>
+        /// Gets the type of the class being mapped.
+        /// </summary>
         public abstract Type SerializedType { get; }
 
         /// <summary>
@@ -25,6 +28,18 @@ namespace FluentJsonNet
         {
             return member.MetadataToken == memberInfo.MetadataToken
                    && member.DeclaringType == memberInfo.DeclaringType;
+        }
+
+        internal string DiscriminatorFieldName;
+
+        /// <summary>
+        /// Defines the name of the field that is used to discriminate
+        ///  subclasses of the type being currently mapped.
+        /// </summary>
+        /// <param name="fieldName"></param>
+        protected void DiscriminateSubClassesOnField(string fieldName)
+        {
+            this.DiscriminatorFieldName = fieldName;
         }
     }
 }

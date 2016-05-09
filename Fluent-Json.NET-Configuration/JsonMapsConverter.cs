@@ -124,27 +124,42 @@ namespace FluentJsonNet
             this.blockOnce = 1;
             var jo = JObject.FromObject(value);
 
-            // finding discriminator field name
-            var jsonMap = listOfMaps.OfType<JsonMap>().Single();
-            var discriminatorFieldName = jsonMap.DiscriminatorFieldName;
-            if (discriminatorFieldName != null)
+            // finding discriminator field names
+            string discriminatorFieldValue = null;
+            foreach (var jsonMapBase in listOfMaps)
             {
-                if (jsonMap is IAndSubtypes)
+                if (jsonMapBase is IAndSubtypes)
                 {
-                    var jsonMapWithSubtypes = jsonMap as IAndSubtypes;
+                    if (listOfMaps.Count > 1)
+                        throw new Exception("Json mapper of type `IAndSubtypes` cannot be combined with other mappers.");
 
-                    var discriminatorFieldValue = jsonMapWithSubtypes.DiscriminatorFieldValueGetter != null
+                    var jsonMapWithSubtypes = jsonMapBase as IAndSubtypes;
+
+                    discriminatorFieldValue = jsonMapWithSubtypes.DiscriminatorFieldValueGetter != null
                         ? jsonMapWithSubtypes.DiscriminatorFieldValueGetter(value.GetType())
                         : value.GetType().AssemblyQualifiedName;
 
-                    jo.Add(discriminatorFieldName, discriminatorFieldValue);
+                    jo.Add(jsonMapBase.DiscriminatorFieldName, discriminatorFieldValue);
                 }
                 else
                 {
-                    var discriminatorFieldValue = listOfMaps.OfType<JsonSubclassMap>().First().DiscriminatorFieldValue;
-                    jo.Add(discriminatorFieldName, discriminatorFieldValue);
+                    if (jsonMapBase.DiscriminatorFieldName != null)
+                    {
+                        if (discriminatorFieldValue == null)
+                            throw new Exception("Value of discriminator field not defined by subclass map.");
+
+                        jo.Add(jsonMapBase.DiscriminatorFieldName, discriminatorFieldValue);
+                        discriminatorFieldValue = null;
+                    }
+
+                    var jsonSubclassMap = jsonMapBase as JsonSubclassMap;
+                    if (jsonSubclassMap?.DiscriminatorFieldValue != null)
+                        discriminatorFieldValue = jsonSubclassMap.DiscriminatorFieldValue;
                 }
             }
+
+            if (discriminatorFieldValue != null)
+                throw new Exception("Discriminating value not set to any field.");
 
             jo.WriteTo(writer, serializer.Converters.ToArray());
         }
