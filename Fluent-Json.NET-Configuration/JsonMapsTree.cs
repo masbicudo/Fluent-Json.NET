@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace FluentJsonNet
 {
-    public class JsonMapsTree
+    internal class JsonMapsTree
     {
         private readonly Dictionary<Type, JsonMapsTreeNode> dictionary;
 

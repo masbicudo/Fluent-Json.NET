@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace FluentJsonNet
 {
-    public class JsonMapsTreeNode
+    internal class JsonMapsTreeNode
     {
         public JsonMapsTreeNode(JsonMapBase mapper, Type parent, Type[] children)
         {
