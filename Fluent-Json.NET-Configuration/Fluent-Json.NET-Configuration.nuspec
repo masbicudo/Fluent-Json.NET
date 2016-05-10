@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Fluent-Json.NET</id>
-    <version>0.0.1</version>
+    <version>0.1.0</version>
     <title>Fluent Configuration for Json.NET by MASBicudo</title>
     <authors>Miguel Angelo (masbicudo)</authors>
     <owners>Miguel Angelo</owners>
@@ -19,13 +19,14 @@
         See the project page for more.
     </description>
     <releaseNotes>
+        0.1.0 - multiple level discriminators
         0.0.1 - removed JetBrains.Annotations dependency
         0.0.0 - initial release
         See the project page for more.
     </releaseNotes>
     <copyright>Copyright MASBicudo 2016</copyright>
     <tags>
-        fluent configuration for Json.NET masbicudo masb miguel angelo
+        fluent configuration for Json.NET json masbicudo masb miguel angelo
     </tags>
   </metadata>
 </package>
