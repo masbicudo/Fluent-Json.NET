@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentJsonNet;
 using FluentJsonNetTests.Models;
+using Newtonsoft.Json.Serialization;
 
 namespace FluentJsonNetTests.Maps
 {

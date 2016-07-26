@@ -12,7 +12,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace FluentJsonNetTests
 {
     [TestClass]
-    public class UnitTest1 : UnitTestBase
+    public class DiscriminatorTests : UnitTestBase
     {
         [TestMethod]
         public void Test_Serialize_Subclass_With_Discriminator()
