@@ -10,7 +10,8 @@ namespace FluentJsonNetTests.Maps
         {
             this.DiscriminateSubClassesOnField("type");
             this.DiscriminatorValue(this.DiscriminateType);
-            this.NamingStrategy(NamingStrategies.CamelCase);
+
+            this.NamingConvention(NamingConventions.CamelCase);
         }
 
         private string DiscriminateType(Type arg)
@@ -19,7 +20,7 @@ namespace FluentJsonNetTests.Maps
                 return "subtype1";
             if (arg == typeof(ComplexNamesBase))
                 return "base";
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

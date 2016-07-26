@@ -7,7 +7,7 @@ namespace FluentJsonNetTests.Maps
     {
         public ComplexNamesSingleMap()
         {
-            this.NamingStrategy(NamingStrategies.CamelCase);
+            this.NamingConvention(NamingConventions.CamelCase);
         }
     }
 }

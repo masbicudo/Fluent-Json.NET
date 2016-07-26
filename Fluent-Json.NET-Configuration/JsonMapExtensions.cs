@@ -100,7 +100,7 @@ namespace FluentJsonNet
                 });
         }
 
-        public static void NamingStrategy<T>(this JsonMap<T> jsonMap, Func<string, string> renamer)
+        public static void NamingConvention<T>(this JsonMap<T> jsonMap, Func<string, string> renamer)
         {
             jsonMap.Actions.Add((member, property, mode) =>
             {
@@ -110,6 +110,5 @@ namespace FluentJsonNet
                 }
             });
         }
-    }
     }
 }

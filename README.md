@@ -1,93 +1,164 @@
 # Fluent-Json.NET
-Fluent configurations for Json.NET, allows you to map objects, use type discriminators, all without interfering with your data objects. No attributes are required.
+Fluent configurations for Json.NET, allows you to map objects,
+use type discriminators, all without interfering with your data objects.
+No attributes are required. You can even setup serialization of
+third party library types.
 
 # NuGet
 
     Install-Package Fluent-Json.NET
 
-# Example
+# Examples
 
-**serializing a Lion class that inherits from Animal, with a discriminator field**
+These examples are extracted from test cases... with one or two lines less for simplicity.
 
-    {
-	    var jsonStr = JsonConvert.SerializeObject(new Lion(45f, 200f, 1000f));
-	    Assert.AreEqual("{\"strength\":1000.0,\"sight\":200.0,\"speed\":45.0,\"class\":\"lion\"}", jsonStr);
-    }
+ - Plugging fluent classes to Json.NET
+ - Serializing with a discriminator field
+ - Camel case naming
 
-**Plugging fluent classes to Json.NET**
+Plugging fluent classes to Json.NET
+-----------------------------------
 
-    {
-        JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(this.GetType().Assembly.GetTypes());
-    }
+    JsonConvert.DefaultSettings = JsonMaps.GetDefaultSettings(this.GetType().Assembly.GetTypes());
 
-**Model classes**
+Serializing with a discriminator field
+--------------------------------------
 
-    public class Animal
-    {
-        public Animal()
+Discriminator fields provide additional data to the seriaized object,
+so that the deserialization process can then tell what is the type of that object.
+
+  - **Code**
+
+        var jsonStr = JsonConvert.SerializeObject(new Lion(45f, 200f, 1000f));
+
+  - **Resulting JSON**
+
         {
+          "strength": 1000.0,
+          "sight": 200.0,
+          "speed": 45.0,
+          "class": "lion"     // <-- this is the discriminator field
         }
 
-        public Animal(float speed)
+  - **Mapping classes**
+
+        public class AnimalMap : JsonMap<Animal>
         {
-            this.Speed = speed;
+            public AnimalMap()
+            {
+                this.DiscriminateSubClassesOnField("class");
+                this.Map(x => x.Speed, "speed");
+            }
         }
 
-        public float Speed { get; set; }
-    }
-
-    public abstract class Feline : Animal
-    {
-        protected Feline()
+        public class FelineMap : JsonSubclassMap<Feline>
         {
+            public FelineMap()
+            {
+                this.Map(x => x.SightRange, "sight");
+            }
         }
 
-        protected Feline(float speed, float sightRange) : base(speed)
+        public class LionMap : JsonSubclassMap<Lion>
         {
-            this.SightRange = sightRange;
+            public LionMap()
+            {
+                this.DiscriminatorValue("lion");
+                this.Map(x => x.Strength, "strength");
+            }
         }
 
-        public float SightRange { get; set; }
-    }
+  - **Model classes**
 
-    public class Lion : Feline
-    {
-        public Lion()
+        public class Animal
         {
+            public Animal(float speed)
+            {
+                this.Speed = speed;
+            }
+
+            public float Speed { get; set; }
         }
 
-        public Lion(float speed, float sightRange, float strength) : base(speed, sightRange)
+        public abstract class Feline : Animal
         {
-            this.Strength = strength;
+            protected Feline(float speed, float sightRange) : base(speed)
+            {
+                this.SightRange = sightRange;
+            }
+
+            public float SightRange { get; set; }
         }
 
-        public float Strength { get; set; }
-    }
-
-**Mapping classes**
-
-    public class AnimalMap : JsonMap<Animal>
-    {
-        public AnimalMap()
+        public class Lion : Feline
         {
-            this.DiscriminateSubClassesOnField("class");
-            this.Map(x => x.Speed, "speed");
-        }
-    }
+            public Lion(float speed, float sightRange, float strength) : base(speed, sightRange)
+            {
+                this.Strength = strength;
+            }
 
-    public class FelineMap : JsonSubclassMap<Feline>
-    {
-        public FelineMap()
-        {
-            this.Map(x => x.SightRange, "sight");
+            public float Strength { get; set; }
         }
-    }
+        
+Camel case naming
+-----------------
 
-    public class LionMap : JsonSubclassMap<Lion>
-    {
-        public LionMap()
+Naming strategies can be defined so that there is no need to map each field.
+Just use the `NamingStrategy` method to define one.
+
+  - **Code**
+
+        var jsonStr = JsonConvert.SerializeObject(new ComplexNamesSubclass("Miguel", "Bicudo"));
+
+  - **Resulting JSON**
+
         {
-            this.DiscriminatorValue("lion");
-            this.Map(x => x.Strength, "strength");
+          "nameInSubclass": "Miguel",
+          "nameInBase": "Bicudo",
+          "type": "subtype1"
         }
-    }
+
+  - **Mapping classes**
+
+        public class ComplexNamesMap : JsonMap<ComplexNamesBase>.AndSubtypes
+        {
+            public ComplexNamesMap()
+            {
+                this.DiscriminateSubClassesOnField("type");
+                this.DiscriminatorValue(this.DiscriminateType);
+
+                this.NamingStrategy(NamingStrategies.CamelCase);
+            }
+
+            private string DiscriminateType(Type arg)
+            {
+                if (arg == typeof(ComplexNamesSubclass))
+                    return "subtype1";
+                if (arg == typeof(ComplexNamesBase))
+                    return "base";
+                throw new NotSupportedException();
+            }
+        }
+
+  - **Model classes**
+
+        public class ComplexNamesSubclass : ComplexNamesBase
+        {
+            public ComplexNamesSubclass(string nameOfTheEntity, string baseName)
+                : base(baseName)
+            {
+                this.NameInSubclass = nameOfTheEntity;
+            }
+
+            public string NameInSubclass { get; set; }
+        }
+
+        public class ComplexNamesBase
+        {
+            public ComplexNamesBase(string nameOfTheEntity)
+            {
+                this.NameInBase = nameOfTheEntity;
+            }
+
+            public string NameInBase { get; set; }
+        }

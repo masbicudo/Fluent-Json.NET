@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace FluentJsonNet.Utils
 {
-    public static class NamingStrategies
+    public static class NamingConventions
     {
         public static string CamelCase(string name)
         {
