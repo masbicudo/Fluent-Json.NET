@@ -58,6 +58,7 @@
     <Compile Include="JsonMapsTree.cs" />
     <Compile Include="JsonMapsTreeNode.cs" />
     <Compile Include="JsonSubclassMap.cs" />
+    <Compile Include="Utils\NamingStrategies.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\EnumExt.cs" />
   </ItemGroup>

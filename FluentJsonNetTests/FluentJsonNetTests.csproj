@@ -68,6 +68,8 @@
     <Compile Include="Maps.Controls\EditorModelMapDoubleDiscriminator.cs" />
     <Compile Include="Maps.Controls\EditorModelMapNoDiscriminator.cs" />
     <Compile Include="Maps.Controls\TextBoxModelMapNoDiscriminator.cs" />
+    <Compile Include="Maps\ComplexNamesMap.cs" />
+    <Compile Include="Maps\ComplexNamesSingleMap.cs" />
     <Compile Include="Maps\FurnitureMap.cs" />
     <Compile Include="Maps\VehicleMap.cs" />
     <Compile Include="Maps\CatMap.cs" />
@@ -78,6 +80,9 @@
     <Compile Include="Maps.Controls\ControlModelMap.cs" />
     <Compile Include="Maps.Controls\EditorModelMap.cs" />
     <Compile Include="Maps.Controls\TextBoxModelMap.cs" />
+    <Compile Include="Models.ComplexNames\ComplexNamesBase.cs" />
+    <Compile Include="Models.ComplexNames\ComplexNamesSingle.cs" />
+    <Compile Include="Models.ComplexNames\ComplexNamesSubclass.cs" />
     <Compile Include="Models.Controls\ControlModel.cs" />
     <Compile Include="Models.Controls\EditorModel.cs" />
     <Compile Include="Models.Controls\TextBoxModel.cs" />
@@ -93,9 +98,11 @@
     <Compile Include="Models.Animals\Cat.cs" />
     <Compile Include="Models.Animals\Lion.cs" />
     <Compile Include="MyAssert.cs" />
+    <Compile Include="NamingStrategiesTests.cs" />
     <Compile Include="NonDefaultTestMapperAttribute.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RenamingTests.cs" />
     <Compile Include="UnitTestBase.cs" />
   </ItemGroup>
   <ItemGroup>

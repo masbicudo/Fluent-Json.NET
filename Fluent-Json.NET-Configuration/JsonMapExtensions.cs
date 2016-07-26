@@ -99,5 +99,17 @@ namespace FluentJsonNet
                     }
                 });
         }
+
+        public static void NamingStrategy<T>(this JsonMap<T> jsonMap, Func<string, string> renamer)
+        {
+            jsonMap.Actions.Add((member, property, mode) =>
+            {
+                {
+                    property.PropertyName = renamer(member.Name);
+                    property.ShouldSerialize = instance => true;
+                }
+            });
+        }
+    }
     }
 }
