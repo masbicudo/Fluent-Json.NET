@@ -195,6 +195,8 @@ Typings/
 .idea/
 Static/
 
+# files not to be commited
+
 uncommitted/
 *.uncommitted.*
 *.uncommitted
@@ -206,3 +208,15 @@ uncommitted.*
 gen
 gen.*
 *.orig
+
+Uncommited.*
+Uncommited/
+*.TMP
+*.nupkg
+packages/
+project.lock.json
+.vs/config/applicationhost.config
+.vs/*
+!.vs/config/
+*.Signed.csproj
+FluentJsonNet.Tests.*.csproj

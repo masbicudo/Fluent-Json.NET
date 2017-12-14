@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net45;net40;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
+    <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Condition="'$(TargetFramework)'=='netcoreapp2.0'" Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Condition="'$(TargetFramework)'=='netcoreapp2.0'" Include="MSTest.TestAdapter" Version="1.2.0" />
+    <PackageReference Condition="'$(TargetFramework)'=='netcoreapp2.0'" Include="MSTest.TestFramework" Version="1.2.0" />
+    <PackageReference Condition="'$(TargetFramework)'=='netcoreapp1.1'" Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Condition="'$(TargetFramework)'=='netcoreapp1.1'" Include="MSTest.TestAdapter" Version="1.1.11" />
+    <PackageReference Condition="'$(TargetFramework)'=='netcoreapp1.1'" Include="MSTest.TestFramework" Version="1.1.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FluentJsonNet\FluentJsonNet.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="**\*.cs" Exclude="obj\**;bin\**" />
+    <Compile Condition="'$(TargetFramework)'!='net40'" Remove="**\*.net40.cs" />
+    <Compile Condition="'$(TargetFramework)'!='net45'" Remove="**\*.net45.cs" />
+    <Compile Condition="'$(TargetFramework)'!='net461'" Remove="**\*.net461.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netcoreapp1.0'" Remove="**\*.netcoreapp1.0.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netcoreapp1.1'" Remove="**\*.netcoreapp1.1.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netcoreapp2.0'" Remove="**\*.netcoreapp2.0.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netcoreapp2.1'" Remove="**\*.netcoreapp2.1.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard1.0'" Remove="**\*.netstandard1.0.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard1.1'" Remove="**\*.netstandard1.1.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard1.2'" Remove="**\*.netstandard1.2.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard1.3'" Remove="**\*.netstandard1.3.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard1.4'" Remove="**\*.netstandard1.4.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard1.5'" Remove="**\*.netstandard1.5.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard1.6'" Remove="**\*.netstandard1.6.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard2.0'" Remove="**\*.netstandard2.0.cs" />
+    <Compile Condition="$(TargetFramework.StartsWith('netstandard'))==False" Remove="**\*.netstandard.cs" />
+    <EmbeddedResource Include="**\*.resx" />
+  </ItemGroup>
+
+</Project>

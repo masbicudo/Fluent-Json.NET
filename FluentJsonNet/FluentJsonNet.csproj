@@ -1,0 +1,81 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--TODO: support to portable40-net40+sl5+win8+wp8+wpa81-->
+    <TargetFrameworks>netstandard1.0;netstandard2.0;net45;net40</TargetFrameworks>
+    <Title>Fluent Configuration for Json.NET by MASBicudo</Title>
+    <Version>0.2.0</Version>
+    <Authors>Miguel Angelo (masbicudo)</Authors>
+    <Description>Fluent configuration for Json.NET library.
+Tried to follow Fluent NHibernate mapping style.
+Implemented as converter and contract resolver.</Description>
+    <Copyright>Copyright MASBicudo 2017</Copyright>
+    <Product>Fluent-Json.NET</Product>
+    <PackageReleaseNotes>0.2.0 - naming conventions
+0.1.0 - multiple level discriminators
+0.0.1 - removed JetBrains.Annotations dependency
+0.0.0 - initial release
+See the project page for more.</PackageReleaseNotes>
+    <PackageIconUrl>https://raw.githubusercontent.com/masbicudo/Fluent-Json.NET/master/Fluent-Json.NET-Configuration/icon-256.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/masbicudo/Fluent-Json.NET</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/masbicudo/Fluent-Json.NET/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/masbicudo/Fluent-Json.NET</RepositoryUrl>
+    <PackageTags>fluent configuration for Json.NET json masbicudo masb miguel angelo</PackageTags>
+    <Company>MASBicudo</Company>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
+    <PackageId>Fluent-Json.NET</PackageId>
+    <AssemblyName>FluentJsonNet</AssemblyName>
+    <RootNamespace>FluentJsonNet</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants Condition="'$(Configuration)'=='Release'">RELEASE</DefineConstants>
+    <DefineConstants Condition="'$(Configuration)'=='Debug'">DEBUG</DefineConstants>
+    <DefineConstants Condition="'$(Platform)'=='AnyCPU'">ANYCPU</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard1.0'">NETSTANDARD10</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard1.3'">NETSTANDARD13</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD20</DefineConstants>
+    <DefineConstants Condition="$(TargetFramework.StartsWith('netstandard'))">NETSTANDARD</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='net40'">NET40</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='net45'">NET45</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\$(TargetFramework)\FluentJsonNet.xml</DocumentationFile>
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="**\*.cs" Exclude="obj\**;bin\**" />
+    <Compile Condition="'$(TargetFramework)'!='net40'" Remove="**\*.net40.cs" />
+    <Compile Condition="'$(TargetFramework)'!='net45'" Remove="**\*.net45.cs" />
+    <Compile Condition="'$(TargetFramework)'!='net461'" Remove="**\*.net461.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netcoreapp1.0'" Remove="**\*.netcoreapp1.0.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netcoreapp1.1'" Remove="**\*.netcoreapp1.1.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netcoreapp2.0'" Remove="**\*.netcoreapp2.0.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netcoreapp2.1'" Remove="**\*.netcoreapp2.1.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard1.0'" Remove="**\*.netstandard1.0.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard1.1'" Remove="**\*.netstandard1.1.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard1.2'" Remove="**\*.netstandard1.2.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard1.3'" Remove="**\*.netstandard1.3.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard1.4'" Remove="**\*.netstandard1.4.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard1.5'" Remove="**\*.netstandard1.5.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard1.6'" Remove="**\*.netstandard1.6.cs" />
+    <Compile Condition="'$(TargetFramework)'!='netstandard2.0'" Remove="**\*.netstandard2.0.cs" />
+    <Compile Condition="$(TargetFramework.StartsWith('netstandard'))==False" Remove="**\*.netstandard.cs" />
+    <EmbeddedResource Include="**\*.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+</Project>
