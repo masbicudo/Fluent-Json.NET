@@ -61,6 +61,10 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
 
     public abstract class Asserter
     {
+        public string CurrentClass { get; set; }
+        public string CurrentMethod { get; set; }
+        public TestState State { get; set; }
+
         public abstract void AreEqual<T>(T expected, T value);
 
         public abstract void IsInstanceOfType(object value, Type expectedType, string message);
@@ -68,6 +72,13 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
         public abstract void Inconclusive(string message, object[] parameters);
 
         public abstract void IsTrue(bool what);
+    }
+
+    public enum TestState
+    {
+        Ok = 0,
+        Inconclusive = 1,
+        Error = 3,
     }
 }
 

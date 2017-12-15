@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net40;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net40;net45;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -13,6 +13,7 @@
     <PackageReference Condition="'$(TargetFramework)'=='netcoreapp1.1'" Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Condition="'$(TargetFramework)'=='netcoreapp1.1'" Include="MSTest.TestAdapter" Version="1.1.11" />
     <PackageReference Condition="'$(TargetFramework)'=='netcoreapp1.1'" Include="MSTest.TestFramework" Version="1.1.11" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>
