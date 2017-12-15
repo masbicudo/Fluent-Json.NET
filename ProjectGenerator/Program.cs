@@ -39,6 +39,8 @@ namespace ProjectsGenerator
                             { $"TestProjectName", TestProjectName },
                             { $"TestProjectGuid", "{6F8C92C5-38F6-460E-9DDA-6334A1575B31}" },
                             { $"TestProjectRefGuid", "{2FDD0DD1-E278-4AEE-9FD1-69702458519C}" },
+                            { $"ProjectRefGuid", "{82EDA29D-A16E-43D9-8A9A-14E34410B9DB}" },
+                            { $"ProjectName", ProjectName },
                             { $"CurrentYear", DateTime.Now.Year },
                         };
 
