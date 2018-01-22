@@ -70,15 +70,13 @@ namespace ProjectsGenerator
                     }
                     else
                     {
-                        if (File.Exists($"../{TestProjectName}/{TestProjectName}.{target}.csproj"))
-                            continue;
-
                         var l2jsTestNew = (XmlDocument)l2jsTests.Clone();
                         var node = l2jsTestNew.SelectSingleNode("//TargetFrameworks");
                         var targetElement = l2jsTestNew.CreateElement("TargetFramework");
                         targetElement.InnerText = target;
                         node.ParentNode.ReplaceChild(targetElement, node);
-                        l2jsTestNew.Save($"../{TestProjectName}/{TestProjectName}.{target}.csproj");
+
+                        SaveXmlDoc(l2jsTestNew, $"../{TestProjectName}/{TestProjectName}.{target}.csproj");
                     }
                 }
 
@@ -114,12 +112,34 @@ namespace ProjectsGenerator
                 foreach (XmlNode doc in sig.SelectNodes("//DocumentationFile"))
                     doc.InnerText = doc.InnerText.Replace($"{ProjectName}.xml", $"{ProjectName}.Signed.xml");
 
-                sig.Save($"../{ProjectName}/{ProjectName}.Signed.csproj");
-
+                SaveXmlDoc(sig, $"../{ProjectName}/{ProjectName}.Signed.csproj");
             }
 
             Console.WriteLine("Press any key to exit");
             Console.ReadKey();
+        }
+
+        private static void SaveXmlDoc(XmlDocument xmldoc, string fileName)
+        {
+            string oldFileText = null;
+            try
+            {
+                oldFileText = File.ReadAllText(fileName);
+            }
+            catch (IOException)
+            {
+            }
+
+            string newFileText;
+            using (StringWriter sw = new StringWriter())
+            using (XmlTextWriter xw = new XmlTextWriter(sw))
+            {
+                xmldoc.WriteTo(xw);
+                newFileText = sw.ToString();
+            }
+
+            if (oldFileText == null || oldFileText != newFileText)
+                File.WriteAllText(fileName, newFileText);
         }
 
         private static void CreateFromTemplateFolder(Dictionary<string, object> dic, string templatePath, string targetPath)
