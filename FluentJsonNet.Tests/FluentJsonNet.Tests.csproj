@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FluentJsonNet.Tests.Models\FluentJsonNet.Tests.Models.csproj" />
     <ProjectReference Include="..\FluentJsonNet\FluentJsonNet.csproj" />
   </ItemGroup>
 

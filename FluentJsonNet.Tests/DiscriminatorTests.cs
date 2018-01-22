@@ -51,13 +51,13 @@ namespace FluentJsonNet.Tests
         {
             var jsonStr = JsonConvert.SerializeObject(new Car(180f, 4.5f));
 
-            AreEqual("{\"Size\":4.5,\"speed\":180.0,\"class\":\"FluentJsonNet.Tests.Models.Car, FluentJsonNet.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"}", jsonStr);
+            AreEqual("{\"Size\":4.5,\"speed\":180.0,\"class\":\"FluentJsonNet.Tests.Models.Car, FluentJsonNet.Tests.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"}", jsonStr);
         }
 
         [TestMethod]
         public void Test_Deserialize_IAndSubtypes_With_Default_Discriminator()
         {
-            var objVehicle = JsonConvert.DeserializeObject<Vehicle>("{\"Size\":4.5,\"speed\":180.0,\"class\":\"FluentJsonNet.Tests.Models.Car, FluentJsonNet.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"}");
+            var objVehicle = JsonConvert.DeserializeObject<Vehicle>("{\"Size\":4.5,\"speed\":180.0,\"class\":\"FluentJsonNet.Tests.Models.Car, FluentJsonNet.Tests.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"}");
 
             IsInstanceOfType(objVehicle, typeof(Car));
             var objCar = objVehicle as Car;

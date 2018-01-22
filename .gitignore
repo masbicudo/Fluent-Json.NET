@@ -220,5 +220,6 @@ project.lock.json
 !.vs/config/
 *.Signed.csproj
 FluentJsonNet.Tests.*.csproj
+!FluentJsonNet.Tests.Models.csproj
 /FluentJsonNet.Tests.net45/
 /FluentJsonNet.Tests.net40/

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectGenerator", "ProjectGenerator\ProjectGenerator.csproj", "{55918E16-FB81-4FFC-8B34-E7C55C111DC6}"
 EndProject
@@ -20,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentJsonNet.Tests.net40", "FluentJsonNet.Tests.net40\FluentJsonNet.Tests.net40.csproj", "{6F8C92C5-38F6-460E-9DDA-6334A1575B31}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentJsonNet.Tests.net45", "FluentJsonNet.Tests.net45\FluentJsonNet.Tests.net45.csproj", "{829AA441-CAF1-4332-9D70-B228D2197D99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentJsonNet.Tests.Models", "FluentJsonNet.Tests.Models\FluentJsonNet.Tests.Models.csproj", "{49F94A9F-AC05-4658-A19C-5B483A1469F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{829AA441-CAF1-4332-9D70-B228D2197D99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{829AA441-CAF1-4332-9D70-B228D2197D99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{829AA441-CAF1-4332-9D70-B228D2197D99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49F94A9F-AC05-4658-A19C-5B483A1469F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49F94A9F-AC05-4658-A19C-5B483A1469F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49F94A9F-AC05-4658-A19C-5B483A1469F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49F94A9F-AC05-4658-A19C-5B483A1469F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
