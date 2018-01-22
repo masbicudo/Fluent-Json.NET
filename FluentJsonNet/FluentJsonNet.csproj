@@ -4,14 +4,15 @@
     <!--TODO: support to portable40-net40+sl5+win8+wp8+wpa81-->
     <TargetFrameworks>netstandard1.0;netstandard2.0;net45;net40</TargetFrameworks>
     <Title>Fluent Configuration for Json.NET by MASBicudo</Title>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Authors>Miguel Angelo (masbicudo)</Authors>
     <Description>Fluent configuration for Json.NET library.
 Tried to follow Fluent NHibernate mapping style.
 Implemented as converter and contract resolver.</Description>
     <Copyright>Copyright MASBicudo 2017</Copyright>
     <Product>Fluent-Json.NET</Product>
-    <PackageReleaseNotes>0.2.0 - naming conventions
+    <PackageReleaseNotes>0.2.1 - more target frameworks
+0.2.0 - naming conventions
 0.1.0 - multiple level discriminators
 0.0.1 - removed JetBrains.Annotations dependency
 0.0.0 - initial release
