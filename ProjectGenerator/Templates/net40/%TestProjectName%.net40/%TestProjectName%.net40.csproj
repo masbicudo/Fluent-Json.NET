@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Assert.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="TestEndException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

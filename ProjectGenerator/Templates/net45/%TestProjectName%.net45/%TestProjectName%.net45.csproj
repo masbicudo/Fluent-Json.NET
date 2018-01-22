@@ -58,6 +58,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\%TestProjectName%.Models\%TestProjectName%.Models.csproj" />
     <ProjectReference Include="..\%ProjectName%\%ProjectName%.csproj">
       <Project>%ProjectRefGuid%</Project>
       <Name>%ProjectName%</Name>
