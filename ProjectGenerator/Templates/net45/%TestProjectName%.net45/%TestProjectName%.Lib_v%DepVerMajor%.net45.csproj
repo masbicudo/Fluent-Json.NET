@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>%TestProjectName%</RootNamespace>
-    <AssemblyName>%TestProjectName%</AssemblyName>
+    <AssemblyName>%TestProjectName%.Lib_v%DepVerMajor%</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -59,9 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\%TestProjectName%.Models\%TestProjectName%.Models.csproj" />
-    <ProjectReference Include="..\%ProjectName%\%ProjectName%.csproj">
+    <ProjectReference Include="..\%ProjectName%\%ProjectName%.Lib_v%DepVerMajor%.csproj">
       <Project>%ProjectRefGuid%</Project>
-      <Name>%ProjectName%</Name>
+      <Name>%ProjectName%.Lib_v%DepVerMajor%</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

@@ -223,3 +223,4 @@ FluentJsonNet.Tests.*.csproj
 !FluentJsonNet.Tests.Models.csproj
 /FluentJsonNet.Tests.net45/
 /FluentJsonNet.Tests.net40/
+/FluentJsonNet/FluentJsonNet.Lib_v*.csproj

@@ -1,15 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!--TODO: support to portable40-net40+sl5+win8+wp8+wpa81-->
     <TargetFrameworks>netstandard1.0;netstandard2.0;net45;net40</TargetFrameworks>
-    <Title>Fluent Configuration for Json.NET by MASBicudo</Title>
-    <Version>0.2.1</Version>
+    <Title>Fluent Configuration for Json.NET v%DepVerMajor% by MASBicudo</Title>
+    <Version>%Ver%</Version>
     <Authors>Miguel Angelo (masbicudo)</Authors>
-    <Description>Fluent configuration for Json.NET library.
+    <Description>Fluent configuration for Json.NET v%DepVerMajor% library.
 Tried to follow Fluent NHibernate mapping style.
 Implemented as converter and contract resolver.</Description>
-    <Copyright>Copyright MASBicudo 2017</Copyright>
+    <Copyright>Copyright MASBicudo %CurrentYear%</Copyright>
     <Product>Fluent-Json.NET</Product>
     <PackageReleaseNotes>0.2.1 - more target frameworks
 0.2.0 - naming conventions
@@ -25,12 +24,12 @@ See the project page for more.</PackageReleaseNotes>
     <PackageTags>fluent configuration for Json.NET json masbicudo masb miguel angelo</PackageTags>
     <Company>MASBicudo</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyVersion>%VerMajor%.0.0.0</AssemblyVersion>
+    <FileVersion>%VerMajor%.0.0.0</FileVersion>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
-    <PackageId>Fluent-Json.NET</PackageId>
-    <AssemblyName>FluentJsonNet</AssemblyName>
-    <RootNamespace>FluentJsonNet</RootNamespace>
+    <PackageId>Fluent-Json.NET.Lib_v%DepVerMajor%</PackageId>
+    <AssemblyName>%ProjectName%.Lib_v%DepVerMajor%</AssemblyName>
+    <RootNamespace>%ProjectName%</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -46,12 +45,12 @@ See the project page for more.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\$(TargetFramework)\FluentJsonNet.xml</DocumentationFile>
-    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>bin\Release\Lib_v%DepVerMajor%\$(TargetFramework)\%ProjectName%.Lib_v%DepVerMajor%.xml</DocumentationFile>
+    <OutputPath>bin\Release\Lib_v%DepVerMajor%\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\Lib_v%DepVerMajor%\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -76,7 +75,7 @@ See the project page for more.</PackageReleaseNotes>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="%DepVer%" />
   </ItemGroup>
 
 </Project>
