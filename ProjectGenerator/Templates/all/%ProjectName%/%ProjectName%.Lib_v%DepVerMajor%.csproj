@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0;netstandard2.0;net45;net40</TargetFrameworks>
-    <Title>Fluent Configuration for Json.NET v%DepVerMajor% by MASBicudo</Title>
+    <Title>Fluent Configuration for Json.NET v%DepVerMajorPre% by MASBicudo</Title>
     <Version>%Ver%</Version>
     <Authors>Miguel Angelo (masbicudo)</Authors>
-    <Description>Fluent configuration for Json.NET v%DepVerMajor% library.
+    <Description>Fluent configuration for Json.NET v%DepVerMajorPre% library.
 Tried to follow Fluent NHibernate mapping style.
 Implemented as converter and contract resolver.</Description>
     <Copyright>Copyright MASBicudo %CurrentYear%</Copyright>
@@ -28,7 +28,7 @@ See the project page for more.</PackageReleaseNotes>
     <FileVersion>%VerMajor%.0.0.0</FileVersion>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <PackageId>Fluent-Json.NET.Lib_v%DepVerMajor%</PackageId>
-    <AssemblyName>%ProjectName%.Lib_v%DepVerMajor%</AssemblyName>
+    <AssemblyName>%ProjectName%.Lib_v%DepVerMajorPre%</AssemblyName>
     <RootNamespace>%ProjectName%</RootNamespace>
   </PropertyGroup>
 
@@ -45,12 +45,12 @@ See the project page for more.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\Lib_v%DepVerMajor%\$(TargetFramework)\%ProjectName%.Lib_v%DepVerMajor%.xml</DocumentationFile>
-    <OutputPath>bin\Release\Lib_v%DepVerMajor%\</OutputPath>
+    <DocumentationFile>bin\Release\Lib_v%DepVerMajorPre%\$(TargetFramework)\%ProjectName%.Lib_v%DepVerMajorPre%.xml</DocumentationFile>
+    <OutputPath>bin\Release\Lib_v%DepVerMajorPre%\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>bin\Debug\Lib_v%DepVerMajor%\</OutputPath>
+    <OutputPath>bin\Debug\Lib_v%DepVerMajorPre%\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

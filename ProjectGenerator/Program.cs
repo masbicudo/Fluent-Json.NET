@@ -33,6 +33,14 @@ namespace ProjectsGenerator
                     ProjectRefGuid = "{FE194A27-8E05-46C9-AF49-2A1EA71EB978}",
                 }
             },
+            { "11.0.1-beta3", new JsonNetVersionInfo
+                {
+                    //Frameworks = "net20;net35;net40;net45;netstandard1.0;netstandard1.3;netstandard2.0;portable-net40+sl5+win8+wp8+wpa81;portable-net45+win8+wp8+wpa81",
+                    TestProjectGuid = "{6F8C92C5-38F6-460E-9DDA-6334A1571101}",
+                    TestProjectRefGuid = "{5D0AAD7F-C0FA-4FEE-ADB7-EBA8250BC1F8}",
+                    ProjectRefGuid = "{BA10846C-96B9-4BB4-8F2A-02984EB4B2F7}",
+                }
+            },
         };
 
         static void Main(string[] args)
@@ -41,7 +49,9 @@ namespace ProjectsGenerator
 
             foreach (var verKv in JsonNetVersions)
             {
-                var jsonNetVer = new Version(verKv.Key);
+                var jsonNetVerMajor = verKv.Key.Substring(0, verKv.Key.IndexOf('.'));
+                var pre = verKv.Key.Substring((verKv.Key + '-').IndexOf('-'));
+                var jsonNetVerMajorPre = $"{jsonNetVerMajor}{pre}";
                 //var frameworks = verKv.Value.Frameworks;
 
                 if (Directory.Exists($"Templates/all"))
@@ -55,9 +65,10 @@ namespace ProjectsGenerator
                         { $"ProjectRefGuid", verKv.Value.ProjectRefGuid },
                         { $"ProjectName", ProjectName },
                         { $"CurrentYear", DateTime.Now.Year },
-                        { $"Ver", Ver },
+                        { $"Ver", Ver + pre },
                         { $"VerMajor", new Version(Ver).Major },
-                        { $"DepVerMajor", jsonNetVer.Major },
+                        { $"DepVerMajor", jsonNetVerMajor },
+                        { $"DepVerMajorPre", jsonNetVerMajorPre },
                         { $"DepVer", verKv.Key },
                     };
 
@@ -68,12 +79,12 @@ namespace ProjectsGenerator
                 // TEST PROJECTS:
                 //
                 // Test projects are generated from the main multi-targeted test project:
-                // "{TestProjectName}.Lib_v{DepVerMajor}.csproj" file.
+                // "{TestProjectName}.Lib_v{jsonNetVerMajor}.csproj" file.
 
                 {
 
                     var l2jsTests = new XmlDocument();
-                    l2jsTests.Load($"../{TestProjectName}/{TestProjectName}.Lib_v{jsonNetVer.Major}.csproj");
+                    l2jsTests.Load($"../{TestProjectName}/{TestProjectName}.Lib_v{jsonNetVerMajor}.csproj");
 
                     var targetsElement = l2jsTests.SelectNodes("//TargetFrameworks");
                     Console.WriteLine(targetsElement[0].InnerText);
@@ -93,7 +104,8 @@ namespace ProjectsGenerator
                                 { $"ProjectRefGuid", verKv.Value.ProjectRefGuid },
                                 { $"ProjectName", ProjectName },
                                 { $"CurrentYear", DateTime.Now.Year },
-                                { $"DepVerMajor", jsonNetVer.Major },
+                                { $"DepVerMajor", jsonNetVerMajor },
+                                { $"DepVerMajorPre", jsonNetVerMajorPre },
                                 { $"DepVer", verKv.Key },
                             };
 
@@ -113,7 +125,7 @@ namespace ProjectsGenerator
                             if (target == "net45")
                                 foreach (var file in listIncludes)
                                 {
-                                    var targetFileName = Path.Combine(Path.GetFullPath($@"../{TestProjectName}.Lib_v{jsonNetVer.Major}.{target}/"), file);
+                                    var targetFileName = Path.Combine(Path.GetFullPath($@"../{TestProjectName}.Lib_v{jsonNetVerMajor}.{target}/"), file);
                                     Directory.CreateDirectory(Path.GetDirectoryName(targetFileName));
                                     File.Copy(
                                         Path.Combine(Path.GetFullPath($@"../{TestProjectName}/"), file),
@@ -129,7 +141,7 @@ namespace ProjectsGenerator
                             targetElement.InnerText = target;
                             node.ParentNode.ReplaceChild(targetElement, node);
 
-                            SaveXmlDoc(l2jsTestNew, $"../{TestProjectName}/{TestProjectName}.Lib_v{jsonNetVer.Major}.{target}.csproj");
+                            SaveXmlDoc(l2jsTestNew, $"../{TestProjectName}/{TestProjectName}.Lib_v{jsonNetVerMajor}.{target}.csproj");
                         }
                     }
 
@@ -137,12 +149,12 @@ namespace ProjectsGenerator
 
                 // SIGNED ASSEMBLY
                 //
-                // Signed assembly is generated from the main "{ProjectName}.Lib_v{DepVerMajor}.csproj" file.
+                // Signed assembly is generated from the main "{ProjectName}.Lib_v{jsonNetVerMajor}.csproj" file.
 
                 {
 
                     var l2js = new XmlDocument();
-                    l2js.Load($"../{ProjectName}/{ProjectName}.Lib_v{jsonNetVer.Major}.csproj");
+                    l2js.Load($"../{ProjectName}/{ProjectName}.Lib_v{jsonNetVerMajor}.csproj");
 
                     var sig = (XmlDocument)l2js.Clone();
                     var sigMain = sig.SelectSingleNode("//TargetFrameworks").ParentNode;
@@ -158,14 +170,14 @@ namespace ProjectsGenerator
                         sigMain.AppendChild(sig.CreateElement("RootNamespace").With(x => x.InnerText = $"{ProjectName}"));
 
                     if (sigMain.SelectSingleNode("AssemblyName") == null)
-                        sigMain.AppendChild(sig.CreateElement("AssemblyName").With(x => x.InnerText = $"{ProjectName}.Lib_v{jsonNetVer.Major}.Signed"));
+                        sigMain.AppendChild(sig.CreateElement("AssemblyName").With(x => x.InnerText = $"{ProjectName}.Lib_v{jsonNetVerMajor}.Signed"));
                     else
                         sigMain.SelectSingleNode("AssemblyName").InnerText += $".Signed";
 
                     foreach (XmlNode doc in sig.SelectNodes("//DocumentationFile"))
-                        doc.InnerText = doc.InnerText.Replace($"{ProjectName}.xml", $"{ProjectName}.Lib_v{jsonNetVer.Major}.Signed.xml");
+                        doc.InnerText = doc.InnerText.Replace($"{ProjectName}.xml", $"{ProjectName}.Lib_v{jsonNetVerMajorPre}.Signed.xml");
 
-                    SaveXmlDoc(sig, $"../{ProjectName}/{ProjectName}.Lib_v{jsonNetVer.Major}.Signed.csproj");
+                    SaveXmlDoc(sig, $"../{ProjectName}/{ProjectName}.Lib_v{jsonNetVerMajor}.Signed.csproj");
                 }
             }
 

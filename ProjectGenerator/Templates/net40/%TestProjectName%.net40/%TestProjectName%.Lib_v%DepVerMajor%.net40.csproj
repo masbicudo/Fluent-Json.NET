@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>%TestProjectName%.net40</RootNamespace>
-    <AssemblyName>%TestProjectName%.Lib_v%DepVerMajor%.net40</AssemblyName>
+    <AssemblyName>%TestProjectName%.Lib_v%DepVerMajorPre%.net40</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

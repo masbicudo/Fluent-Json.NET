@@ -2,11 +2,11 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("%TestProjectName%.Lib_v%DepVerMajor%.net45")]
+[assembly: AssemblyTitle("%TestProjectName%.Lib_v%DepVerMajorPre%.net45")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("%TestProjectName%.Lib_v%DepVerMajor%.net45")]
+[assembly: AssemblyProduct("%TestProjectName%.Lib_v%DepVerMajorPre%.net45")]
 [assembly: AssemblyCopyright("Copyright © MASBicudo %CurrentYear%")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
