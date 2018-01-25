@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Templates\**" />
-    <EmbeddedResource Remove="Templates\**" />
-    <None Remove="Templates\**" />
+    <Compile Include="**\*.cs" Exclude="obj\**;bin\**" />
+    <Compile Remove="Templates\**\*.cs" />
+    <None Include="Templates\**\*" Exclude="obj\**;bin\**" />
   </ItemGroup>
 
 </Project>

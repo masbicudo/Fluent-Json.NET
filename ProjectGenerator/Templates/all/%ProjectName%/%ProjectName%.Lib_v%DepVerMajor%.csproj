@@ -16,7 +16,7 @@ Implemented as converter and contract resolver.</Description>
 0.0.1 - removed JetBrains.Annotations dependency
 0.0.0 - initial release
 See the project page for more.</PackageReleaseNotes>
-    <PackageIconUrl>https://raw.githubusercontent.com/masbicudo/Fluent-Json.NET/master/Fluent-Json.NET-Configuration/icon-256.png</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/masbicudo/Fluent-Json.NET/master/icon-256.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/masbicudo/Fluent-Json.NET</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/masbicudo/Fluent-Json.NET/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>

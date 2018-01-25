@@ -38,9 +38,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentJsonNet.Tests.Lib_v10
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib_v10", "Lib_v10", "{99DE0A34-6C58-46FE-905F-61B358E03F08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentJsonNet.Tests.Lib_v9.net45", "FluentJsonNet.Tests.net45\FluentJsonNet.Tests.Lib_v9.net45.csproj", "{F393F64E-4497-4457-B051-27CB281FC4D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentJsonNet.Tests.Lib_v9.net45", "FluentJsonNet.Tests.Lib_v9.net45\FluentJsonNet.Tests.Lib_v9.net45.csproj", "{F393F64E-4497-4457-B051-27CB281FC4D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentJsonNet.Tests.Lib_v10.net45", "FluentJsonNet.Tests.net45\FluentJsonNet.Tests.Lib_v10.net45.csproj", "{206C386B-AC91-4F03-B6CF-DF5F487029A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentJsonNet.Tests.Lib_v10.net45", "FluentJsonNet.Tests.Lib_v10.net45\FluentJsonNet.Tests.Lib_v10.net45.csproj", "{206C386B-AC91-4F03-B6CF-DF5F487029A9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib_v9", "Lib_v9", "{55288B6D-BF6D-466B-B8B9-DECF9CC23232}"
 EndProject

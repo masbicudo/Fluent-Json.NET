@@ -16,7 +16,7 @@ namespace ProjectsGenerator
         private static readonly string ProjectName = "FluentJsonNet";
         private static readonly string TestProjectName = "FluentJsonNet.Tests";
         private static readonly Dictionary<string, JsonNetVersionInfo> JsonNetVersions = new Dictionary<string, JsonNetVersionInfo> {
-            //{  "8.0.1", "netstandard1.0;netstandard2.0;net45;net40" },
+            //{  "8.0.1", "" },
             {  "9.0.1", new JsonNetVersionInfo
                 {
                     //Frameworks = "net20;net35;net40;net45;netstandard1.0;portable-net40+sl5+wp80+win8+wpa81;portable-net45+wp80+win8+wpa81",
@@ -113,7 +113,7 @@ namespace ProjectsGenerator
                             if (target == "net45")
                                 foreach (var file in listIncludes)
                                 {
-                                    var targetFileName = Path.Combine(Path.GetFullPath($@"../{TestProjectName}.{target}/"), file);
+                                    var targetFileName = Path.Combine(Path.GetFullPath($@"../{TestProjectName}.Lib_v{jsonNetVer.Major}.{target}/"), file);
                                     Directory.CreateDirectory(Path.GetDirectoryName(targetFileName));
                                     File.Copy(
                                         Path.Combine(Path.GetFullPath($@"../{TestProjectName}/"), file),
