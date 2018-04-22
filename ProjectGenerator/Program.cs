@@ -45,8 +45,6 @@ namespace ProjectsGenerator
 
         static void Main(string[] args)
         {
-            Console.WriteLine($"Environment.CurrentDirectory = {Environment.CurrentDirectory}");
-
             foreach (var verKv in JsonNetVersions)
             {
                 var jsonNetVerMajor = verKv.Key.Substring(0, verKv.Key.IndexOf('.'));
@@ -83,10 +81,15 @@ namespace ProjectsGenerator
 
                 {
 
-                    var l2jsTests = new XmlDocument();
-                    l2jsTests.Load($"../{TestProjectName}/{TestProjectName}.Lib_v{jsonNetVerMajor}.csproj");
+                    var testsProjXml = new XmlDocument();
+                    var pathProj = $"../{TestProjectName}/{TestProjectName}.Lib_v{jsonNetVerMajor}.csproj";
 
-                    var targetsElement = l2jsTests.SelectNodes("//TargetFrameworks");
+                    FindAndSetCurrentPath(pathProj);
+                    Console.WriteLine($"Environment.CurrentDirectory = {Environment.CurrentDirectory}");
+
+                    testsProjXml.Load(pathProj);
+
+                    var targetsElement = testsProjXml.SelectNodes("//TargetFrameworks");
                     Console.WriteLine(targetsElement[0].InnerText);
                     var targetsProj = targetsElement[0].InnerText.Split(";");
                     Console.WriteLine(targetsElement[0].InnerText);
@@ -135,13 +138,13 @@ namespace ProjectsGenerator
                         }
                         else
                         {
-                            var l2jsTestNew = (XmlDocument)l2jsTests.Clone();
-                            var node = l2jsTestNew.SelectSingleNode("//TargetFrameworks");
-                            var targetElement = l2jsTestNew.CreateElement("TargetFramework");
+                            var testProjXml_2 = (XmlDocument)testsProjXml.Clone();
+                            var node = testProjXml_2.SelectSingleNode("//TargetFrameworks");
+                            var targetElement = testProjXml_2.CreateElement("TargetFramework");
                             targetElement.InnerText = target;
                             node.ParentNode.ReplaceChild(targetElement, node);
 
-                            SaveXmlDoc(l2jsTestNew, $"../{TestProjectName}/{TestProjectName}.Lib_v{jsonNetVerMajor}.{target}.csproj");
+                            SaveXmlDoc(testProjXml_2, $"../{TestProjectName}/{TestProjectName}.Lib_v{jsonNetVerMajor}.{target}.csproj");
                         }
                     }
 
@@ -153,10 +156,10 @@ namespace ProjectsGenerator
 
                 {
 
-                    var l2js = new XmlDocument();
-                    l2js.Load($"../{ProjectName}/{ProjectName}.Lib_v{jsonNetVerMajor}.csproj");
+                    var projXml = new XmlDocument();
+                    projXml.Load($"../{ProjectName}/{ProjectName}.Lib_v{jsonNetVerMajor}.csproj");
 
-                    var sig = (XmlDocument)l2js.Clone();
+                    var sig = (XmlDocument)projXml.Clone();
                     var sigMain = sig.SelectSingleNode("//TargetFrameworks").ParentNode;
                     var ver = sigMain.SelectSingleNode("Version").InnerText;
 
@@ -183,6 +186,23 @@ namespace ProjectsGenerator
 
             Console.WriteLine("Press any key to exit");
             Console.ReadKey(intercept: true);
+        }
+
+        private static void FindAndSetCurrentPath(string pathProj)
+        {
+            while (true)
+            {
+                try
+                {
+                    if (File.Exists(pathProj))
+                        break;
+                }
+                catch (Exception)
+                {
+                }
+
+                Environment.CurrentDirectory = Path.GetDirectoryName(Environment.CurrentDirectory);
+            }
         }
 
         private static void SaveXmlDoc(XmlDocument xmldoc, string fileName)
